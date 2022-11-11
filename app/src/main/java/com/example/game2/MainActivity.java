@@ -2,6 +2,8 @@ package com.example.game2;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -52,19 +54,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         int id = view.getId();
-        switch (id) {
-            case R.id.btn_1:
-                if (controlador.isOnRace()){}
-                break;
-            case R.id.btn_2:
-
-                break;
+        if (controlador.isOnRace()){
+            switch (id) {
+                case R.id.btn_1:
+                    controlador.player1Accion();
+                    break;
+                case R.id.btn_2:
+                    controlador.player2Accion();
+                    break;
+            }
         }
+
     }
 
     @Override
     public void showMsg(String msg) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if(!txtMsg.isShown()){
+                    txtMsg.setVisibility(View.VISIBLE);
+                }
 
+                txtMsg.setText(msg);
+
+                ObjectAnimator sX = ObjectAnimator.ofFloat(txtMsg, "scaleX", 0.5f, 1.0f);
+                ObjectAnimator sY = ObjectAnimator.ofFloat(txtMsg, "scaleX", 0.5f, 1.0f);
+                AnimatorSet animatorSet = new AnimatorSet();
+                animatorSet.playTogether(sY,sX);
+                animatorSet.start();
+
+            }
+        });
     }
 
     @Override
